@@ -243,6 +243,7 @@ $("#modify-colour-button").on("click", () => {
 });
 
 $("#background-colour-button").on("click", () => {
+  removeFormInputValidationStyle();
   let isHexValid = isInputValid("hex-input");
   if (isHexValid) {
     let hexValue = $("#hex-input").val().substring(1);

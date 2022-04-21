@@ -51,26 +51,26 @@ router.post("/", (req, res) => {
 
 router.put("/:id([0-9]+)", (req, res) => {
   try {
-    const { colorId, hexString, rgb, hsl, name } = req.body;
+    const { id } = req.params;
 
     for (let index in colours) {
-      if (colours[index].colorId == colorId) {
-        colours[index].hexString = hexString;
-        colours[index].rgb = rgb;
-        colours[index].hsl = hsl;
-        colours[index].name = name;
+      if (colours[index].colorId == id) {
+
+        for (const key in req.body) {
+          colours[index][key] = req.body[key];
+        }
 
         return res.status(200).send({
-          message: `Colour with ID ${colorId} has been updated.`,
-          uri: `http://localhost:3000/colours/${colorId}`,
+          message: `Colour with ID ${id} has been updated.`,
+          uri: `http://localhost:3000/colours/${id}`,
         });
       }
     }
 
     colours.push(req.body);
     return res.status(201).send({
-      message: `Colour with ID ${colorId} has been created.`,
-      uri: `http://localhost:3000/colours/${colorId}`,
+      message: `Colour with ID ${id} has been created.`,
+      uri: `http://localhost:3000/colours/${id}`,
     });
   } catch (error) {
     console.log("[PUT /colours/:id] Error: " + error);

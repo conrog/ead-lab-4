@@ -185,7 +185,7 @@ function createColour(body) {
 
 function updateColour(body) {
   $.ajax({
-    url: `${BASE_URL}/colours/${body.colorId}`,
+    url: `${BASE_URL}/colours/${$("#id-input").val()}`,
     type: "PUT",
     data: body,
     success: (response) => {

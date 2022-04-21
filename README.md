@@ -9,13 +9,13 @@
 
 ## Instructions
 
-When running the command below ensure that you are in the root of the project directory.
+When running the commands below ensure that you are in the root of the project directory.
 
 Install the project dependencies running the following command:
 
 `npm install`
 
-Once the dependencies are installed, start the server run the following command:
+Once the dependencies are installed, start the server by running the following command:
 
 `npm start`
 

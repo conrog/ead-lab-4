@@ -29,25 +29,53 @@ router.get("/:id([0-9]+)", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  const { colorId, hexString, rgb, hsl, name } = req.body;
-  console.log(colorId);
-  console.log(hexString);
-  console.log(rgb);
-  console.log(hsl);
-  console.log(name);
+  try {
+    const { colorId, hexString, rgb, hsl, name } = req.body;
 
-  res.send("ok");
-  //check if id is not used
-  //insert colour with id
+    for (let colour of colours) {
+      if (colour.colorId == colorId) {
+        return res.status(409).send(`Colour with ID ${colorId} already exists.`);
+      }
+    }
+
+    colours.push({ colorId, hexString, rgb, hsl, name });
+
+    return res.status(201).send({
+      message: `Colour with ID ${colorId} has been created.`,
+      uri: `http://localhost:3000/colours/${colorId}`,
+    });
+  } catch (error) {
+    console.log("[POST /colours] Error: " + error);
+  }
 });
 
-// {
-//   "colorId": 1,
-//   "hexString": "#800000",
-//   "rgb": { "r": 128, "g": 0, "b": 0 },
-//   "hsl": { "h": 0, "s": 100, "l": 25 },
-//   "name": "Maroon"
-// }
+router.put("/:id([0-9]+)", (req, res) => {
+  try {
+    const { colorId, hexString, rgb, hsl, name } = req.body;
+
+    for (let index in colours) {
+      if (colours[index].colorId == colorId) {
+        colours[index].hexString = hexString;
+        colours[index].rgb = rgb;
+        colours[index].hsl = hsl;
+        colours[index].name = name;
+
+        return res.status(200).send({
+          message: `Colour with ID ${colorId} has been updated.`,
+          uri: `http://localhost:3000/colours/${colorId}`,
+        });
+      }
+    }
+
+    colours.push(req.body);
+    return res.status(201).send({
+      message: `Colour with ID ${colorId} has been created.`,
+      uri: `http://localhost:3000/colours/${colorId}`,
+    });
+  } catch (error) {
+    console.log("[PUT /colours/:id] Error: " + error);
+  }
+});
 
 router.delete("/:id([0-9]+)", (req, res) => {
   try {

@@ -14,58 +14,81 @@
     <h1 class="text-center">EAD Lab 4 Express.js</h1>
     <div class="card container w-75 border">
       <div class="row">
-        <div class="col-8 border border-primary p-4">
-          <form>
+        <div class="col-8 p-4">
+          <form class="d-flex flex-column gap-1">
             <div class="row">
               <label for="id-input" class="col-2 col-form-label">Colour ID:</label>
               <div class="col-10 row align-content-center">
-                <input type="text" id="id-input" class="form-control form-control-sm" />
+                <input type="text" id="id-input" class="form-control form-control-sm" pattern="[0-9]+" required />
+                <div class="invalid-feedback">Please provide a valid Colour ID</div>
               </div>
             </div>
             <div class="row">
               <label for="hex-input" class="col-2 col-form-label">Hex:</label>
               <div class="col-10 row align-content-center">
-                <input type="text" id="hex-input" class="form-control form-control-sm modifiable" />
+                <input
+                  type="text"
+                  id="hex-input"
+                  class="form-control form-control-sm"
+                  pattern="^#(?:[0-9a-fA-F]{3}){1,2}$"
+                  required
+                />
+                <div class="invalid-feedback">Please provide a valid Hex Value</div>
               </div>
             </div>
             <div class="row">
               <label for="rgb-input" class="col-2 col-form-label">RGB:</label>
               <div class="col-10 row align-content-center">
-                <input type="text" id="rgb-input" class="form-control form-control-sm modifiable" />
+                <input
+                  type="text"
+                  id="rgb-input"
+                  class="form-control form-control-sm"
+                  pattern="rgb\(\s*(?:(?:\d{1,2}|1\d\d|2(?:[0-4]\d|5[0-5]))\s*,?){3}\)$"
+                  required
+                />
+                <div class="invalid-feedback">Please provide a valid RGB Value</div>
               </div>
             </div>
             <div class="row">
               <label for="hsl-input" class="col-2 col-form-label">HSL</label>
               <div class="col-10 row align-content-center">
-                <input type="text" id="hsl-input" class="form-control form-control-sm modifiable" />
+                <input
+                  type="text"
+                  id="hsl-input"
+                  class="form-control form-control-sm"
+                  pattern="hsl\(([\d.]+),([\d.]+),([\d.]+)\)"
+                  required
+                />
+                <div class="invalid-feedback">Please provide a valid HSL Value</div>
               </div>
             </div>
             <div class="row">
               <label for="name-input" class="col-2 col-form-label">Name</label>
               <div class="col-10 row align-content-center">
-                <input type="text" id="name-input" class="form-control form-control-sm modifiable" />
+                <input type="text" id="name-input" class="form-control form-control-sm" required />
+                <div class="invalid-feedback">Please provide a name</div>
               </div>
             </div>
           </form>
         </div>
-        <div class="col-4 border border-danger p-4">
+        <div class="col-4 p-4">
           <div id="colour-display" class="h-100 rounded-1"></div>
         </div>
       </div>
       <div class="row">
-        <div class="border border-info d-flex flex-row justify-content-evenly p-4">
+        <div class="d-flex flex-column flex-sm-column flex-lg-row justify-content-evenly p-4 gap-1">
           <button id="show-colour-button" type="button" class="btn btn-primary">Show Colour</button>
           <button id="insert-colour-button" type="button" class="btn btn-primary">Insert Colour</button>
           <button id="remove-colour-button" type="button" class="btn btn-primary">Remove Colour</button>
-          <button type="button" class="btn btn-primary">Modify Colour</button>
-          <button type="button" class="btn btn-primary">Select Background</button>
+          <button id="modify-colour-button" type="button" class="btn btn-primary">Modify Colour</button>
+          <button id="background-colour-button" type="button" class="btn btn-primary">Select Background</button>
         </div>
       </div>
     </div>
     <h2 class="text-center">List of Colours</h2>
     <div class="container w-75 card test p-0">
-      <table class="table border border-1t">
-        <thread class="sticky-top">
+      <table class="table table-hover">
+        <thread>
           <tr>
             <th>ID</th>
             <th>Hex</th>
@@ -78,44 +101,46 @@
       </table>
     </div>
 
-    <!-- Error Toast -->
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-      <div
-        class="toast align-items-center text-white bg-danger border-0"
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
-        id="error-toast"
-      >
-        <div class="d-flex">
-          <div id="error-toast-body" class="toast-body"></div>
-          <button
-            type="button"
-            class="btn-close btn-close-white me-2 m-auto"
-            data-bs-dismiss="toast"
-            aria-label="Close"
-          ></button>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <!-- Error Toast -->
+      <div style="z-index: 11">
+        <div
+          class="toast align-items-center text-white bg-danger border-0"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+          id="error-toast"
+        >
+          <div class="d-flex">
+            <div id="error-toast-body" class="toast-body"></div>
+            <button
+              type="button"
+              class="btn-close btn-close-white me-2 m-auto"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Success Toast -->
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-      <div
-        class="toast align-items-center text-white bg-success border-0"
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
-        id="success-toast"
-      >
-        <div class="d-flex">
-          <div id="success-toast-body" class="toast-body"></div>
-          <button
-            type="button"
-            class="btn-close btn-close-white me-2 m-auto"
-            data-bs-dismiss="toast"
-            aria-label="Close"
-          ></button>
+      <!-- Success Toast -->
+      <div style="z-index: 11">
+        <div
+          class="toast align-items-center text-white bg-success border-0"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+          id="success-toast"
+        >
+          <div class="d-flex">
+            <div id="success-toast-body" class="toast-body"></div>
+            <button
+              type="button"
+              class="btn-close btn-close-white me-2 m-auto"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
         </div>
       </div>
     </div>
